@@ -5,7 +5,7 @@ import {
   getTransferFeeAmount,
   TOKEN_2022_PROGRAM_ID,
   unpackAccount,
-  withdrawWithheldTokensFromAccounts,
+  withdrawWithheldTokensFromMint,
 } from '@solana/spl-token';
 import {
   clusterApiUrl,
@@ -21,10 +21,11 @@ import {
 
 // dotenv.config();
 
-const PAYER = [179,3,16,89,75,94,147,146,107,142,137,163,66,234,236,82,65,183,254,245,47,110,215,216,72,127,119,46,215,249,199,241,11,212,37,99,137,5,243,10,5,224,219,17,144,108,64,250,90,25,98,185,74,111,2,81,54,174,65,121,23,185,59,201]
+// const PAYER = [179,3,16,89,75,94,147,146,107,142,137,163,66,234,236,82,65,183,254,245,47,110,215,216,72,127,119,46,215,249,199,241,11,212,37,99,137,5,243,10,5,224,219,17,144,108,64,250,90,25,98,185,74,111,2,81,54,174,65,121,23,185,59,201]
+const PAYER = [151,250,133,160,178,197,133,103,69,122,236,210,204,163,134,138,41,3,125,57,8,168,214,17,218,120,180,227,245,234,75,72,10,76,127,170,65,248,245,58,114,27,168,242,66,37,79,216,141,207,121,134,27,72,177,85,105,137,186,168,39,146,175,38] //account11
 // export const PAYER = "43EeRipwq7QZurfASn7CnYuJ14pVaCEv7KWav9vknt1bFR6qspYXC2DbaC2gGydrVx4TFtWfyCFkEaLLLMB2bZoT"
-const RECIPIENT_KEYPAIR = '2wQkEABxE9abUhB1JnsiGMVrrVpdxFyJ73ViHVga6pW93ZQe1wd8SwdhbnauSZEqumAu4QzzV5h4bk7AdBy38zzE' //CLdt94RjT9Mnxh2jUFCiyDMsjfY158GBwt6bHtrcVb5L
-
+const RECIPIENT_KEYPAIR = '2wQkEABxE9abUhB1JnsiGMVrrVpdxFyJ73ViHVga6pW93ZQe1wd8SwdhbnauSZEqumAu4QzzV5h4bk7AdBy38zzE' //account2  CLdt94RjT9Mnxh2jUFCiyDMsjfY158GBwt6bHtrcVb5L 
+// const RECIPIENT_KEYPAIR = [219,80,248,37,168,206,248,75,62,231,9,245,47,197,202,69,56,123,48,65,227,254,97,100,53,237,228,29,125,72,128,38,136,84,211,19,40,174,29,210,203,159,149,192,140,13,214,156,232,252,83,20,21,196,200,128,119,222,73,90,15,130,2,214] //Main Wallet
 
 // if (!process.env.RECIPIENT_KEYPAIR || !process.env.MINT_KEYPAIR ) {
 //   throw new Error('Necessary keypairs not found, have you run the create-token and mint-and-transfer scripts?');
@@ -34,22 +35,31 @@ const connection = new Connection(clusterApiUrl('devnet'), 'confirmed');
 
 const payer = Keypair.fromSecretKey(
   // new Uint8Array(JSON.parse(process.env.PAYER))
-  Uint8Array.from(PAYER)
+  // Uint8Array.from(PAYER)
+  // new Uint8Array(JSON.parse(PAYER))
+  new Uint8Array(PAYER)
+
 );
 
 // const mint = Keypair.fromSecretKey(
 //   new Uint8Array(JSON.parse(process.env.MINT_KEYPAIR))
 // ).publicKey;
 // const mint = new PublicKey("Enjp5SF3Ft1oRJ7PnEm5t4xCV1rR9b6f4cCFH6QghZQB") //spl-2022
-const mint = new PublicKey("jqoKcrxD2nPNUDboA7JojvRXBfQNedD6Yhnse2kTwfX") // aleyana
+// const mint = new PublicKey("jqoKcrxD2nPNUDboA7JojvRXBfQNedD6Yhnse2kTwfX") // aleyana
+const mint = new PublicKey("66fo8qDCE32QkcWmqwriFJA4feEYhSZs3iyeyBpzpe2c") //spl224
 const withdrawWithheldAuthority = Keypair.fromSecretKey(
   // new Uint8Array(JSON.parse(process.env.WITHDRAW_WITHHELD_AUTHORITY))
-  Uint8Array.from(PAYER)
+  // Uint8Array.from(PAYER)
+  // new Uint8Array(JSON.parse(PAYER))
+  new Uint8Array(PAYER)
 );
 
 const recipientKeypair = Keypair.fromSecretKey(
   // new Uint8Array(JSON.parse(process.env.RECIPIENT_KEYPAIR))
-  Uint8Array.from(bs58.decode(RECIPIENT_KEYPAIR))
+  // new Uint8Array.from(bs58.decode(RECIPIENT_KEYPAIR))
+  new Uint8Array(bs58.decode(RECIPIENT_KEYPAIR))
+  // new Uint8Array(JSON.parse(RECIPIENT_KEYPAIR))
+  // new Uint8Array(RECIPIENT_KEYPAIR)
 );
 
 // const recipientPublicKey = new PublicKey('CLdt94RjT9Mnxh2jUFCiyDMsjfY158GBwt6bHtrcVb5L')
@@ -101,14 +111,28 @@ if (accountsToWithdrawFrom.length === 0) {
   console.log('accountsToWithdrawFrom: ', accountsToWithdrawFrom) //ayad
 }
 
-const withdrawTokensSig = await withdrawWithheldTokensFromAccounts(
+// const withdrawTokensSig = await withdrawWithheldTokensFromAccounts(
+//   connection, // connection to use
+//   payer, // payer of the transaction fee
+//   mint, // the token mint
+//   recipientKeypair.publicKey, // the destination account
+//   withdrawWithheldAuthority, // the withdraw withheld token authority
+//   [], // signing accounts
+//   accountsToWithdrawFrom, // source accounts from which to withdraw withheld fees
+//   undefined, // options for confirming the transaction
+//   TOKEN_2022_PROGRAM_ID // SPL token program id
+// );
+
+// Optionally - you can also withdraw withheld tokens from the mint itself
+// see ReadMe for the difference
+
+const withdrawTokensSig = await withdrawWithheldTokensFromMint(
   connection, // connection to use
   payer, // payer of the transaction fee
   mint, // the token mint
   recipientKeypair.publicKey, // the destination account
-  withdrawWithheldAuthority, // the withdraw withheld token authority
+  withdrawWithheldAuthority, // the withdraw withheld authority
   [], // signing accounts
-  accountsToWithdrawFrom, // source accounts from which to withdraw withheld fees
   undefined, // options for confirming the transaction
   TOKEN_2022_PROGRAM_ID // SPL token program id
 );
@@ -119,21 +143,6 @@ console.log(
 );
 
 console.log('withdrawTokensSig: ', withdrawTokensSig)
-// Optionally - you can also withdraw withheld tokens from the mint itself
-// see ReadMe for the difference
-
-// await withdrawWithheldTokensFromMint(
-//   connection, // connection to use
-//   payer, // payer of the transaction fee
-//   mint, // the token mint
-//   recipientKeypair.publicKey, // the destination account
-//   withdrawWithheldAuthority, // the withdraw withheld authority
-//   [], // signing accounts
-//   undefined, // options for confirming the transaction
-//   TOKEN_2022_PROGRAM_ID // SPL token program id
-// );
-
-
 
 //ayad
 /*
