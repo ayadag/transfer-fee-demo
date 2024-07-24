@@ -112,3 +112,10 @@ console.log(
 //   undefined, // options for confirming the transaction
 //   TOKEN_2022_PROGRAM_ID // SPL token program id
 // );
+
+
+//ayad
+/*
+Found 1 accounts to withdraw from 🤑
+Bag secured, check it: https://solana.fm/tx/4UdRSDNPiT9HVDaciWZGAvpVD8fX2fgSSiqFVFqENX8YBc916Ecs8FAEoeF2f3SsM4FauRbAudTCKd1gtZTsqZKE?cluster=devnet-solana
+*/

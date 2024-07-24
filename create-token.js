@@ -1,20 +1,20 @@
+import { addKeypairToEnvFile } from '@solana-developers/node-helpers';
 import {
+  createInitializeMintInstruction,
+  createInitializeTransferFeeConfigInstruction,
+  ExtensionType,
+  getMintLen,
+  TOKEN_2022_PROGRAM_ID,
+} from '@solana/spl-token';
+import {
+  clusterApiUrl,
   Connection,
   Keypair,
   LAMPORTS_PER_SOL,
+  sendAndConfirmTransaction,
   SystemProgram,
   Transaction,
-  clusterApiUrl,
-  sendAndConfirmTransaction,
 } from '@solana/web3.js';
-import {
-  ExtensionType,
-  TOKEN_2022_PROGRAM_ID,
-  createInitializeMintInstruction,
-  createInitializeTransferFeeConfigInstruction,
-  getMintLen,
-} from '@solana/spl-token';
-import { addKeypairToEnvFile } from '@solana-developers/node-helpers';
 
 // We establish a connection to the cluster
 const connection = new Connection(clusterApiUrl('devnet'), 'confirmed');
@@ -125,3 +125,15 @@ console.log(
   'Token created!',
   `https://solana.fm/tx/${mintTransactionSig}?cluster=devnet-solana`
 );
+
+
+//ayad 
+/*
+Payer address: j42hS9CvVecrMqA45tsHT3PzAj1zrCsQPZs72P1vcTF
+Payer Account Balance: 1000000000
+Mint Authority address: 13Mz89WY1YGapiX1MT2oNiPk5BeAuhefe9NATRX5ZhwV
+Mint address: CRVdwT6wNAQZnaJ23SsViMuFRALRkDu9yKMBzTesC5ez
+Transfer Fee Config Authority address: CjUN1Q6z6mdJdFD9zU7qm5DyoUPiXLazHzJem5fZzaGh
+Withdraw Withheld Authority address: GGrWneDg69gzDd9eA7LcGPXqBsuDwyD9bbawCBpRkYg2
+Token created! https://solana.fm/tx/56A9dAux9JDJYnB2kZJBgF9sBVenQVwPECjUU6F3G8FppDoX5g9LEKxwnuKTMoEdJ9ur72z9aszj3Vi3awfMqUWf?cluster=devnet-solana
+*/

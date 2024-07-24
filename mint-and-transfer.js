@@ -1,12 +1,18 @@
-import { Connection, Keypair, clusterApiUrl } from '@solana/web3.js';
+import dotenv from 'dotenv';
+
+import { addKeypairToEnvFile } from '@solana-developers/node-helpers';
 import {
-  TOKEN_2022_PROGRAM_ID,
   createAccount,
   mintTo,
+  TOKEN_2022_PROGRAM_ID,
   transferCheckedWithFee,
 } from '@solana/spl-token';
-import { addKeypairToEnvFile } from '@solana-developers/node-helpers';
-import dotenv from 'dotenv';
+import {
+  clusterApiUrl,
+  Connection,
+  Keypair,
+} from '@solana/web3.js';
+
 dotenv.config();
 
 if (!process.env.PAYER || !process.env.MINT_AUTHORITY || !process.env.MINT_KEYPAIR) {
@@ -105,3 +111,9 @@ console.log(
   'Tokens minted and transferred:',
   `https://solana.fm/tx/${transferCheckedWithFeeSig}?cluster=devnet-solana`
 );
+
+
+//ayad
+/*
+Tokens minted and transferred: https://solana.fm/tx/qjGgWGfDKgXqoA4MTQUwGy2rdhsecd64uwPkK3ENBFP5iRFrxGP7ZDXnGEQXtxPbFN6qDupSy9PKB95DySeRhfa?cluster=devnet-solana
+*/
