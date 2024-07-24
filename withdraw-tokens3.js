@@ -72,6 +72,7 @@ const recipientKeypair = Keypair.fromSecretKey(
      49,  97,  65, 129,  78, 112, 117,  39, 243
   ])
 )
+console.log('recipientKeypair.publickey: ', recipientKeypair.publicKey)
 
 const balance = await connection.getBalance(payer.publicKey);
 if (balance < 10000000) { // 0.01 SOL
@@ -158,6 +159,9 @@ Bag secured, check it: https://solana.fm/tx/4UdRSDNPiT9HVDaciWZGAvpVD8fX2fgSSiqF
 */
 
 /*
+recipientKeypair.publickey:  PublicKey [PublicKey(7LM6ZaBbmazPtghAennquFRo2v5mCcft69CS37ewfqKp)] {
+  _bn: <BN: 5e1ae1220243ef824330956f7e72330d71f70328369c36316141814e707527f3>
+}
 Found 1 accounts to withdraw from 🤑
 Bag secured, check it: https://solana.fm/tx/3rze1D55qCDNWQ5DFuQuj8tz4PwM8iBxchqXyj14R5C8Jp2aYzFwermkMFNoStzD7HqykX4E6R9VLqcj2t5x3byQ?cluster=devnet-solana
  */
