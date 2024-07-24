@@ -1,5 +1,6 @@
-import dotenv from 'dotenv';
+import bs58 from 'bs58';
 
+// import dotenv from 'dotenv';
 import {
   getTransferFeeAmount,
   TOKEN_2022_PROGRAM_ID,
@@ -10,31 +11,48 @@ import {
   clusterApiUrl,
   Connection,
   Keypair,
+  PublicKey,
 } from '@solana/web3.js';
 
-dotenv.config();
+// import {
+//   PAYER,
+//   RECIPIENT_KEYPAIR,
+// } from './config-copy';
 
-if (!process.env.RECIPIENT_KEYPAIR || !process.env.MINT_KEYPAIR ) {
-  throw new Error('Necessary keypairs not found, have you run the create-token and mint-and-transfer scripts?');
-}
+// dotenv.config();
+
+const PAYER = [179,3,16,89,75,94,147,146,107,142,137,163,66,234,236,82,65,183,254,245,47,110,215,216,72,127,119,46,215,249,199,241,11,212,37,99,137,5,243,10,5,224,219,17,144,108,64,250,90,25,98,185,74,111,2,81,54,174,65,121,23,185,59,201]
+// export const PAYER = "43EeRipwq7QZurfASn7CnYuJ14pVaCEv7KWav9vknt1bFR6qspYXC2DbaC2gGydrVx4TFtWfyCFkEaLLLMB2bZoT"
+const RECIPIENT_KEYPAIR = '2wQkEABxE9abUhB1JnsiGMVrrVpdxFyJ73ViHVga6pW93ZQe1wd8SwdhbnauSZEqumAu4QzzV5h4bk7AdBy38zzE' //CLdt94RjT9Mnxh2jUFCiyDMsjfY158GBwt6bHtrcVb5L
+
+
+// if (!process.env.RECIPIENT_KEYPAIR || !process.env.MINT_KEYPAIR ) {
+//   throw new Error('Necessary keypairs not found, have you run the create-token and mint-and-transfer scripts?');
+// }
 
 const connection = new Connection(clusterApiUrl('devnet'), 'confirmed');
 
 const payer = Keypair.fromSecretKey(
-  new Uint8Array(JSON.parse(process.env.PAYER))
+  // new Uint8Array(JSON.parse(process.env.PAYER))
+  Uint8Array.from(PAYER)
 );
 
-const mint = Keypair.fromSecretKey(
-  new Uint8Array(JSON.parse(process.env.MINT_KEYPAIR))
-).publicKey;
-
+// const mint = Keypair.fromSecretKey(
+//   new Uint8Array(JSON.parse(process.env.MINT_KEYPAIR))
+// ).publicKey;
+// const mint = new PublicKey("Enjp5SF3Ft1oRJ7PnEm5t4xCV1rR9b6f4cCFH6QghZQB") //spl-2022
+const mint = new PublicKey("jqoKcrxD2nPNUDboA7JojvRXBfQNedD6Yhnse2kTwfX") // aleyana
 const withdrawWithheldAuthority = Keypair.fromSecretKey(
-  new Uint8Array(JSON.parse(process.env.WITHDRAW_WITHHELD_AUTHORITY))
+  // new Uint8Array(JSON.parse(process.env.WITHDRAW_WITHHELD_AUTHORITY))
+  Uint8Array.from(PAYER)
 );
 
 const recipientKeypair = Keypair.fromSecretKey(
-  new Uint8Array(JSON.parse(process.env.RECIPIENT_KEYPAIR))
+  // new Uint8Array(JSON.parse(process.env.RECIPIENT_KEYPAIR))
+  Uint8Array.from(bs58.decode(RECIPIENT_KEYPAIR))
 );
+
+// const recipientPublicKey = new PublicKey('CLdt94RjT9Mnxh2jUFCiyDMsjfY158GBwt6bHtrcVb5L')
 
 const balance = await connection.getBalance(payer.publicKey);
 if (balance < 10000000) { // 0.01 SOL
@@ -80,6 +98,7 @@ if (accountsToWithdrawFrom.length === 0) {
   throw new Error('No accounts to withdraw from: no transfers have been made');
 } else {
   console.log('Found', accountsToWithdrawFrom.length, 'accounts to withdraw from 🤑');
+  console.log('accountsToWithdrawFrom: ', accountsToWithdrawFrom) //ayad
 }
 
 const withdrawTokensSig = await withdrawWithheldTokensFromAccounts(
@@ -99,6 +118,7 @@ console.log(
   `https://solana.fm/tx/${withdrawTokensSig}?cluster=devnet-solana`
 );
 
+console.log('withdrawTokensSig: ', withdrawTokensSig)
 // Optionally - you can also withdraw withheld tokens from the mint itself
 // see ReadMe for the difference
 
@@ -112,3 +132,19 @@ console.log(
 //   undefined, // options for confirming the transaction
 //   TOKEN_2022_PROGRAM_ID // SPL token program id
 // );
+
+
+
+//ayad
+/*
+accountsToWithdrawFrom:  [
+  PublicKey [PublicKey(13norQkkBSKaX9CUGMcbRjkwgomRQw2FGKuHxgx737ek)] {
+    _bn: <BN: b6f4e7322e52972c1f55ca77cf8374fcb42de088912e4ab35ca8ed41768cb5>
+  },
+  PublicKey [PublicKey(29hHEDx3BuBGkv4yWuFnYsURXvUEYjF19PnFkMnTd4tQ)] {
+    _bn: <BN: 1115e0be71f9d93cca9e0ab1f314f5933657bda42cb0034c2c4fbaa31dda59f1>
+  },
+  PublicKey [PublicKey(B9hVhZvkT8hXT5TcvmWsuobywYzrvYArG3kju3wov1Jv)] {
+    _bn: <BN: 96cf4da9d6e15de36572877f9d0d5d07041790022247cd09fb55ea0cd6509d77>
+  }
+]*/
