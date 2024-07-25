@@ -30,6 +30,8 @@ const PAYER = [151,250,133,160,178,197,133,103,69,122,236,210,204,163,134,138,41
 const payer = Keypair.fromSecretKey(
   new Uint8Array(PAYER)
 );
+// export const owner: Keypair = Keypair.fromSecretKey(Uint8Array.from(bs58.decode("43EeRipwq7QZurfASn7CnYuJ14pVaCEv7KWav9vknt1bFR6qspYXC2DbaC2gGydrVx4TFtWfyCFkEaLLLMB2bZoT")))
+
 
 // const mint = Keypair.fromSecretKey(
 //   new Uint8Array(JSON.parse(process.env.MINT_KEYPAIR))
